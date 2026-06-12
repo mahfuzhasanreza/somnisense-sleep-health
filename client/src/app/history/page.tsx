@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { useRouter } from "next/navigation";
-import { History as HistoryIcon, Loader2, Calendar } from "lucide-react";
+import { History as HistoryIcon, Loader2, Calendar, Search, Filter } from "lucide-react";
 
 interface Prediction {
   _id: string;
@@ -28,6 +28,9 @@ export default function HistoryPage() {
   const [predictions, setPredictions] = useState<Prediction[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const [searchQuery, setSearchQuery] = useState("");
+  const [sortBy, setSortBy] = useState("newest");
 
   useEffect(() => {
     if (!isLoading && !user) {
@@ -65,13 +68,62 @@ export default function HistoryPage() {
     );
   }
 
+  // Derived state for filtering and sorting
+  const processedPredictions = [...predictions]
+    .filter((p) => {
+      if (!searchQuery) return true;
+      const lowerQuery = searchQuery.toLowerCase();
+      const recsMatch = p.predictionResult.recommendations?.some((r) => r.toLowerCase().includes(lowerQuery));
+      const riskText = p.predictionResult.prediction === 0 ? "low risk" : p.predictionResult.prediction === 1 ? "moderate risk" : "high risk";
+      return recsMatch || riskText.includes(lowerQuery);
+    })
+    .sort((a, b) => {
+      if (sortBy === "newest") return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime();
+      if (sortBy === "oldest") return new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime();
+      if (sortBy === "highest-risk") return b.predictionResult.prediction - a.predictionResult.prediction;
+      if (sortBy === "lowest-risk") return a.predictionResult.prediction - b.predictionResult.prediction;
+      return 0;
+    });
+
   return (
-    <div className="p-8  mx-auto">
-      <div className="mb-8 flex items-center space-x-3">
-        <div>
-          <h1 className="text-3xl font-bold text-slate-900">Your Prediction History</h1>
-          <p className="text-slate-500">History for {user?.username}</p>
+    <div className="p-8 mx-auto">
+      <div className="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="flex items-center space-x-3">
+        
+          <div>
+            <h1 className="text-3xl font-bold text-slate-900">Your Prediction History</h1>
+            <p className="text-slate-500">History for {user?.username}</p>
+          </div>
         </div>
+
+        {/* Search & Sort Controls */}
+        {predictions.length > 0 && (
+          <div className="flex flex-col sm:flex-row gap-3">
+            <div className="relative">
+              <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+              <input 
+                type="text" 
+                placeholder="Search..." 
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full sm:w-64 pl-9 pr-4 py-2 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-orange-500/50 transition-all"
+              />
+            </div>
+            <div className="relative">
+              <Filter className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                className="w-full sm:w-48 pl-9 pr-8 py-2 bg-white border border-slate-200 rounded-xl text-sm appearance-none focus:outline-none focus:ring-2 focus:ring-orange-500/50 transition-all cursor-pointer"
+              >
+                <option value="newest">Newest First</option>
+                <option value="oldest">Oldest First</option>
+                <option value="highest-risk">Highest Risk</option>
+                <option value="lowest-risk">Lowest Risk</option>
+              </select>
+            </div>
+          </div>
+        )}
       </div>
 
       {error && (
@@ -90,9 +142,13 @@ export default function HistoryPage() {
             Take your first assessment
           </button>
         </div>
+      ) : processedPredictions.length === 0 ? (
+        <div className="bg-white rounded-2xl p-12 text-center border border-slate-200 shadow-sm">
+          <p className="text-slate-500">No predictions match your search criteria.</p>
+        </div>
       ) : (
         <div className="space-y-6">
-          {predictions.map((item) => (
+          {processedPredictions.map((item) => (
             <div key={item._id} className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
               <div className="flex justify-between items-start mb-4">
                 <div className="flex items-center space-x-2 text-slate-500 text-sm font-medium">
