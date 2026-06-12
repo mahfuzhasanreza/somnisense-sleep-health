@@ -65,7 +65,12 @@ async function forwardAndLog(req, res, endpoint) {
   try {
     const requestData = req.body;
     const userId = req.user.userId; // Extracted from auth middleware
-    const userEmail = req.user.email; 
+    let userEmail = req.user.email; 
+    
+    if (!userEmail) {
+      const user = await User.findById(userId);
+      userEmail = user ? user.email : 'unknown@example.com';
+    } 
 
     // Forward request to FastAPI
     const response = await axios.post(`${FASTAPI_URL}${endpoint}`, requestData);
