@@ -79,13 +79,11 @@ export default function Home() {
         <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] rounded-full bg-orange-500/5 blur-[120px]"></div>
       </div>
 
-      <div className="max-w-6xl mx-auto w-full space-y-10">
+      <div className="mx-auto w-full space-y-10">
         
         {/* Header matching History route */}
         <div className="mb-8 flex items-center space-x-3">
-          <div className="p-3 bg-white border border-orange-100 rounded-xl shadow-sm">
-            <Sparkles className="w-6 h-6 text-orange-600" />
-          </div>
+         
           <div>
             <h1 className="text-3xl font-bold text-slate-900">Your Prediction</h1>
             <p className="text-slate-500">Enter your recent sleep habits to analyze your risk profile.</p>
@@ -93,7 +91,7 @@ export default function Home() {
         </div>
         
         {/* Minimal Top Form Section */}
-        <section className="bg-white rounded-3xl p-6 lg:p-8 shadow-sm border border-slate-100">
+        <section className="bg-white rounded-3xl p-6 lg:p-8 border border-slate-200">
           <form onSubmit={handleSubmit}>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4 items-end">
               
@@ -117,7 +115,7 @@ export default function Home() {
 
               {/* Sleep Duration */}
               <div className="space-y-2">
-                <label className="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center">
+                <label className="ml-1 text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center">
                    Sleep (hrs)
                 </label>
                 <input
@@ -134,7 +132,7 @@ export default function Home() {
 
               {/* Caffeine */}
               <div className="space-y-2">
-                <label className="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center">
+                <label className="ml-1 text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center">
                   Caffeine (mg)
                 </label>
                 <input
@@ -149,7 +147,7 @@ export default function Home() {
 
               {/* Screen Time */}
               <div className="space-y-2">
-                <label className="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center">
+                <label className="ml-1 text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center">
                   Screen (min)
                 </label>
                 <input
@@ -182,13 +180,13 @@ export default function Home() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full h-full rounded-xl shadow-md bg-orange-600 hover:bg-orange-500 text-white font-bold transition-all flex items-center justify-center disabled:opacity-70 disabled:cursor-not-allowed"
+                  className="w-full h-full rounded-xl  bg-orange-600 hover:bg-orange-500 text-white font-bold transition-all flex items-center justify-center disabled:opacity-70 disabled:cursor-not-allowed"
                 >
                   {loading ? (
                     <Loader2 className="w-5 h-5 animate-spin" />
                   ) : (
                     <>
-                      <Sparkles className="w-4 h-4 mr-2" /> Analyze
+                      Analyze
                     </>
                   )}
                 </button>
@@ -210,10 +208,10 @@ export default function Home() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               
               {/* Primary Score Card */}
-              <div className={`col-span-1 p-8 rounded-3xl shadow-xl flex flex-col items-center justify-center text-center border overflow-hidden relative ${
+              <div className={`col-span-1 p-8 rounded-3xl flex flex-col items-center justify-center text-center border overflow-hidden relative ${
                 result === 0 ? "bg-gradient-to-br from-green-500 to-emerald-600 border-green-400" :
-                result === 1 ? "bg-gradient-to-br from-amber-400 to-orange-500 border-amber-300" :
-                "bg-gradient-to-br from-rose-500 to-red-600 border-rose-400"
+                result === 1 ? "bg-gradient-to-br from-amber-400 to-orange-600 border-amber-300" :
+                "bg-gradient-to-br from-rose-500 to-red-600 border-red-400"
               }`}>
                 {/* Decorative background circle */}
                 <div className="absolute w-64 h-64 bg-white/10 rounded-full -top-10 -right-10 blur-3xl"></div>
@@ -234,19 +232,16 @@ export default function Home() {
               </div>
 
               {/* Recommendations Dashboard */}
-              <div className="col-span-1 lg:col-span-2 bg-white rounded-3xl p-8 shadow-xl border border-slate-100 flex flex-col">
+              <div className="col-span-1 lg:col-span-2 bg-white rounded-3xl p-8  border border-slate-200 flex flex-col">
                 <div className="flex items-center space-x-3 mb-8">
-                  <div className="p-2 bg-orange-100 rounded-lg">
-                    <Sparkles className="w-5 h-5 text-orange-600" />
-                  </div>
                   <h3 className="text-2xl font-bold text-slate-900 tracking-tight">Action Plan</h3>
                 </div>
 
                 {recommendations.length > 0 ? (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {recommendations.map((rec, idx) => (
-                      <div key={idx} className="bg-slate-50 p-5 rounded-2xl border border-slate-100 flex items-start space-x-4 hover:shadow-md transition-shadow">
-                        <div className="bg-white rounded-full w-8 h-8 flex items-center justify-center font-bold text-orange-500 shadow-sm shrink-0">
+                      <div key={idx} className="bg-slate-50 p-5 rounded-2xl border border-slate-100 flex items-start space-x-4 hover:shadow-sm transition-shadow">
+                        <div className="bg-white rounded-full w-8 h-8 flex items-center justify-center font-bold text-orange-500  shrink-0">
                           {idx + 1}
                         </div>
                         <p className="text-slate-700 text-sm font-medium leading-relaxed">{rec}</p>

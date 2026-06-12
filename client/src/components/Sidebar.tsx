@@ -18,12 +18,13 @@ export default function Sidebar() {
 
   return (
     <aside className="w-64 bg-white border-r border-slate-200 h-full flex flex-col fixed left-0 top-0 pt-6 shadow-sm">
-      <div className="px-6 mb-8 flex items-center space-x-3">
+      <div className="px-6 mb-8 flex items-center space-x-3 border-b border-slate-200 pb-5">
         <div className="p-2 bg-orange-100 rounded-xl text-orange-600">
           <Moon className="w-6 h-6" />
         </div>
         <span className="font-bold text-xl text-orange-600 tracking-tight">SomniSense</span>
       </div>
+
 
       <nav className="flex-1 px-4 space-y-2">
         {navLinks.map((link) => {
