@@ -131,6 +131,20 @@ export default function HistoryPage() {
                   <p className="font-semibold text-slate-700">{item.userInput?.wake_episodes_per_night || 0}</p>
                 </div>
               </div>
+
+              {item.predictionResult?.recommendations && item.predictionResult.recommendations.length > 0 && (
+                <div className="border-t border-slate-100 pt-4 mt-2">
+                  <p className="text-slate-700 text-sm font-bold mb-2">Recommendations:</p>
+                  <ul className="space-y-1">
+                    {item.predictionResult.recommendations.map((rec, idx) => (
+                      <li key={idx} className="flex items-start text-xs text-slate-600 font-medium">
+                        <span className="text-orange-500 mr-2 mt-0.5">•</span>
+                        <span>{rec}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
           ))}
         </div>
