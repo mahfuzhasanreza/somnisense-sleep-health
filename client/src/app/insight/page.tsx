@@ -12,6 +12,8 @@ import {
   Activity, Clock, Coffee, Moon, Monitor, Loader2, Sparkles, Target, 
   Database, BrainCircuit, CheckCircle2, AlertTriangle, ShieldAlert, Zap
 } from "lucide-react";
+import methodology from "../../../public/somnisense-methodology.png";
+import architecture from "../../../public/SomniSense-web-app-architecture.png";
 
 const chartData = [
   { name: 'Felt Rested RF Accuracy', score: 73.56 },
@@ -272,6 +274,66 @@ export default function Dashboard() {
           </Card>
         </div>
       </section>
+
+      {/* MODEL EXPLAINABILITY & SYSTEM DESIGN */}
+<section>
+  <h2 className="text-2xl font-bold text-slate-900 mb-6">
+    Methodology & Web App Architecture
+  </h2>
+
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+    {/* Methodology */}
+    <Card>
+      <CardHeader>
+        <CardTitle>SomniSense Methodology</CardTitle>
+        <p className="text-sm text-slate-500">
+          End-to-end workflow of the proposed SomniSense framework,
+          including data preprocessing, feature engineering, machine
+          learning training, explainability analysis, and personalized
+          recommendation generation.
+        </p>
+      </CardHeader>
+
+      <CardContent className="flex justify-center rounded-b-xl">
+        <div className="relative w-full aspect-square max-w-lg">
+          <Image
+            src={methodology}
+            alt="SomniSense Methodology"
+            fill
+            className="object-contain"
+          />
+        </div>
+      </CardContent>
+    </Card>
+
+    {/* Web Architecture */}
+    <Card>
+      <CardHeader>
+        <CardTitle>Web Application Architecture</CardTitle>
+        <p className="text-sm text-slate-500">
+          Overall architecture of the SomniSense platform showing the
+          interaction between Next.js frontend, Node.js backend,
+          FastAPI ML service, MongoDB database, and trained XGBoost
+          models.
+        </p>
+      </CardHeader>
+
+      <CardContent className="flex justify-center rounded-b-xl">
+        <div className="relative w-full aspect-square max-w-lg">
+          <Image
+            src={architecture}
+            alt="SomniSense Web Architecture"
+            fill
+            className="object-contain"
+          />
+        </div>
+      </CardContent>
+    </Card>
+
+
+  </div>
+</section>
 
       {/* 7. FEATURE ENGINEERING SECTION */}
       <section>
