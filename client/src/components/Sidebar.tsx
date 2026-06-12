@@ -13,7 +13,7 @@ export default function Sidebar() {
 
   const navLinks = [
     { name: "Predict", href: "/", icon: Home },
-    { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+    { name: "Insight", href: "/insight", icon: LayoutDashboard },
     { name: "History", href: "/history", icon: History },
   ];
 
