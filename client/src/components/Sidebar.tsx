@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, History, LogOut, Moon } from "lucide-react";
+import { Home, History, LogOut, Moon, LayoutDashboard } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 
 export default function Sidebar() {
@@ -13,6 +13,7 @@ export default function Sidebar() {
 
   const navLinks = [
     { name: "Predict", href: "/", icon: Home },
+    { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
     { name: "History", href: "/history", icon: History },
   ];
 
