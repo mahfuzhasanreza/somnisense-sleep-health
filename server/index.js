@@ -37,7 +37,7 @@ app.post('/api/auth/register', async (req, res) => {
     user = new User({ username, email, password: hashedPassword });
     await user.save();
 
-    const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '7d' });
+    const token = jwt.sign({ userId: user._id, email: user.email }, JWT_SECRET, { expiresIn: '7d' });
     res.json({ token, user: { username, email } });
   } catch (err) {
     res.status(500).json({ error: 'Registration failed', details: err.message });
@@ -53,7 +53,7 @@ app.post('/api/auth/login', async (req, res) => {
     const validPassword = await bcrypt.compare(password, user.password);
     if (!validPassword) return res.status(400).json({ error: 'Invalid email or password' });
 
-    const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '7d' });
+    const token = jwt.sign({ userId: user._id, email: user.email }, JWT_SECRET, { expiresIn: '7d' });
     res.json({ token, user: { username: user.username, email: user.email } });
   } catch (err) {
     res.status(500).json({ error: 'Login failed', details: err.message });
@@ -65,6 +65,7 @@ async function forwardAndLog(req, res, endpoint) {
   try {
     const requestData = req.body;
     const userId = req.user.userId; // Extracted from auth middleware
+    const userEmail = req.user.email; 
 
     // Forward request to FastAPI
     const response = await axios.post(`${FASTAPI_URL}${endpoint}`, requestData);
@@ -73,6 +74,7 @@ async function forwardAndLog(req, res, endpoint) {
     // Save to MongoDB
     const predictionLog = new Prediction({
       userId,
+      userEmail,
       userInput: requestData,
       endpoint,
       predictionResult: responseData

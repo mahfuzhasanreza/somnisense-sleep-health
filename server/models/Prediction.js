@@ -6,6 +6,10 @@ const predictionSchema = new mongoose.Schema({
     ref: 'User',
     required: true
   },
+  userEmail: {
+    type: String,
+    required: true
+  },
   userInput: {
     stress_score: Number,
     sleep_duration_hrs: Number,
