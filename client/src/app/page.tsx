@@ -143,159 +143,14 @@ export default function Home() {
   ];
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col p-6 lg:p-12 relative overflow-hidden">
-      {/* Background gradients */}
-      <div className="absolute top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
-        <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] rounded-full bg-orange-500/5 blur-[120px]"></div>
-      </div>
-
-      <div className="mx-auto w-full max-w-6xl space-y-10">
-        
-        {/* Header matching History route */}
-        <div className="mb-8 flex items-center space-x-3">
-          <div className="p-3 bg-white border border-orange-100 rounded-xl shadow-sm">
-            <Sparkles className="w-6 h-6 text-orange-600" />
-          </div>
-          <div>
-            <h1 className="text-3xl font-bold text-slate-900">Your Prediction</h1>
-            <p className="text-slate-500">Enter your recent sleep habits to analyze your risk profile.</p>
-          </div>
-        </div>
-        
-        {/* Minimal Top Form Section */}
-        <section className="bg-white rounded-3xl p-6 lg:p-8 border border-slate-200 shadow-sm">
-          <form onSubmit={handleSubmit}>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4 items-end">
-              {/* Stress */}
-              <div className="space-y-2">
-                <label className="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center">
-                  Stress ({formData.stress_score}/10)
-                </label>
-                <div className="flex items-center h-[42px] px-3 bg-slate-50 border border-slate-200 rounded-xl focus-within:ring-2 focus-within:ring-orange-500/50 focus-within:border-orange-500 transition-all">
-                  <input
-                    type="range"
-                    name="stress_score"
-                    min="0"
-                    max="10"
-                    value={formData.stress_score}
-                    onChange={handleChange}
-                    className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-orange-500 outline-none"
-                  />
-                </div>
-              </div>
-
-              {/* Sleep Duration */}
-              <div className="space-y-2">
-                <label className="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center">Sleep (hrs)</label>
-                <input
-                  type="number" name="sleep_duration_hrs" min="0" max="24" step="0.5"
-                  value={formData.sleep_duration_hrs} onChange={handleChange}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm text-slate-900 focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500 transition-all outline-none"
-                />
-              </div>
-
-              {/* Caffeine */}
-              <div className="space-y-2">
-                <label className="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center">Caffeine (mg)</label>
-                <input
-                  type="number" name="caffeine_mg_before_bed" min="0"
-                  value={formData.caffeine_mg_before_bed} onChange={handleChange}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm text-slate-900 focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500 transition-all outline-none"
-                />
-              </div>
-
-              {/* Screen Time */}
-              <div className="space-y-2">
-                <label className="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center">Screen (min)</label>
-                <input
-                  type="number" name="screen_time_before_bed_mins" min="0"
-                  value={formData.screen_time_before_bed_mins} onChange={handleChange}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm text-slate-900 focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500 transition-all outline-none"
-                />
-              </div>
-
-              {/* Wakes */}
-              <div className="space-y-2">
-                <label className="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center">Wakes</label>
-                <input
-                  type="number" name="wake_episodes_per_night" min="0"
-                  value={formData.wake_episodes_per_night} onChange={handleChange}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm text-slate-900 focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500 transition-all outline-none"
-                />
-              </div>
-
-              {/* Submit Button */}
-              <div className="h-[42px]">
-                <button
-                  type="submit" disabled={loading}
-                  className="w-full h-full rounded-xl shadow-sm bg-orange-600 hover:bg-orange-500 text-white font-bold transition-all flex items-center justify-center disabled:opacity-70 disabled:cursor-not-allowed"
-                >
-                  {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <>Analyze</>}
-                </button>
-              </div>
-            </div>
-          </form>
-          {error && <div className="mt-4 p-3 rounded-xl bg-red-50 border border-red-200 text-red-600 text-sm font-medium">{error}</div>}
-        </section>
-
-        {/* Dynamic Stylized Result Output */}
-        {result !== null && (
-          <section className="animate-in fade-in slide-in-from-bottom-8 duration-700">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              <div className={`col-span-1 p-8 rounded-3xl flex flex-col items-center justify-center text-center border overflow-hidden relative ${
-                result === 0 ? "bg-gradient-to-br from-green-500 to-emerald-600 border-green-400" :
-                result === 1 ? "bg-gradient-to-br from-amber-400 to-orange-600 border-amber-300" :
-                "bg-gradient-to-br from-rose-500 to-red-600 border-red-400"
-              }`}>
-                <div className="absolute w-64 h-64 bg-white/10 rounded-full -top-10 -right-10 blur-3xl"></div>
-                <div className="bg-white/20 p-4 rounded-2xl mb-6 backdrop-blur-sm">
-                  {result === 0 ? <CheckCircle2 className="w-12 h-12 text-white" /> :
-                   result === 1 ? <AlertTriangle className="w-12 h-12 text-white" /> :
-                   <ShieldAlert className="w-12 h-12 text-white" />}
-                </div>
-                <h2 className="text-white/80 text-sm font-black uppercase tracking-widest mb-2">Risk Level</h2>
-                <div className="text-5xl font-black text-white mb-2 tracking-tight">
-                  {result === 0 ? "LOW" : result === 1 ? "MODERATE" : "HIGH"}
-                </div>
-                <p className="text-white/90 text-sm font-medium px-4">
-                  Based on your analysis, you currently exhibit a {result === 0 ? "healthy" : "risky"} sleep profile.
-                </p>
-              </div>
-
-              <div className="col-span-1 lg:col-span-2 bg-white rounded-3xl p-8 border border-slate-200 flex flex-col">
-                <div className="flex items-center space-x-3 mb-8">
-                  <h3 className="text-2xl font-bold text-slate-900 tracking-tight">Action Plan</h3>
-                </div>
-                {recommendations.length > 0 ? (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {recommendations.map((rec, idx) => (
-                      <div key={idx} className="bg-slate-50 p-5 rounded-2xl border border-slate-100 flex items-start space-x-4">
-                        <div className="bg-white rounded-full w-8 h-8 flex items-center justify-center font-bold text-orange-500 shrink-0 shadow-sm">{idx + 1}</div>
-                        <p className="text-slate-700 text-sm font-medium leading-relaxed">{rec}</p>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="flex-1 flex flex-col items-center justify-center text-center p-6 bg-slate-50 rounded-2xl border border-slate-100">
-                    <CheckCircle2 className="w-12 h-12 text-green-500 mb-3" />
-                    <h4 className="text-lg font-bold text-slate-900 mb-1">Excellent Routine</h4>
-                    <p className="text-slate-500 text-sm">Your sleep habits are perfectly optimized. Keep it up!</p>
-                  </div>
-                )}
-              </div>
-            </div>
-          </section>
-        )}
-
+    <div className="min-h-screen bg-slate-50 flex flex-col p-6 lg:p-8 relative overflow-hidden">
         {/* --- PERSONALIZED DASHBOARD SECTION --- */}
         {!loadingHistory && totalAssessments > 0 && (
-          <section className="pt-8 border-t border-slate-200">
+          <section className="">
             <div className="flex items-center space-x-3 mb-8">
-              <div className="p-3 bg-white border border-slate-200 rounded-xl shadow-sm">
-                <LineChartIcon className="w-6 h-6 text-slate-700" />
-              </div>
+              
               <div>
-                <h2 className="text-2xl font-bold text-slate-900">Your Personalized Analytics</h2>
+                <h2 className="text-3xl font-bold text-slate-900">Your Personalized Analytics</h2>
                 <p className="text-slate-500">A summary of your historical sleep data and trends.</p>
               </div>
             </div>
@@ -305,7 +160,7 @@ export default function Home() {
               <Card>
                 <CardHeader className="pb-2">
                   <CardTitle className="text-xs text-slate-500 uppercase tracking-wider flex items-center">
-                    <History className="w-4 h-4 mr-2 text-slate-400" /> Assessments Taken
+                    Assessments Taken
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -315,7 +170,7 @@ export default function Home() {
               <Card>
                 <CardHeader className="pb-2">
                   <CardTitle className="text-xs text-slate-500 uppercase tracking-wider flex items-center">
-                    <Clock className="w-4 h-4 mr-2 text-blue-500" /> Avg Sleep
+                    Avg Sleep
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -325,7 +180,7 @@ export default function Home() {
               <Card>
                 <CardHeader className="pb-2">
                   <CardTitle className="text-xs text-slate-500 uppercase tracking-wider flex items-center">
-                    <Activity className="w-4 h-4 mr-2 text-rose-500" /> Avg Stress
+                    Avg Stress
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -335,7 +190,7 @@ export default function Home() {
               <Card className="bg-orange-50 border-orange-200">
                 <CardHeader className="pb-2">
                   <CardTitle className="text-xs text-orange-600 uppercase tracking-wider flex items-center font-bold">
-                    <Target className="w-4 h-4 mr-2 text-orange-500" /> Common Risk
+                   Common Risk
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -345,9 +200,9 @@ export default function Home() {
             </div>
 
             {/* Charts Grid */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
               {/* Recharts Trends */}
-              <Card className="lg:col-span-2">
+              <Card className="lg:col-span-3">
                 <CardHeader>
                   <CardTitle>Behavioral Trends Over Time</CardTitle>
                 </CardHeader>
@@ -394,7 +249,7 @@ export default function Home() {
           </section>
         )}
         
-      </div>
+     
     </div>
   );
 }

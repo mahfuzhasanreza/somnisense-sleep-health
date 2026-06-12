@@ -12,9 +12,10 @@ export default function Sidebar() {
   if (!user) return null; // Don't show sidebar if not logged in
 
   const navLinks = [
-    { name: "Predict", href: "/", icon: Home },
-    { name: "Insight", href: "/insight", icon: LayoutDashboard },
+    { name: "Dashboard", href: "/", icon: Home },
+    { name: "Predict", href: "/predict", icon: Home },
     { name: "History", href: "/history", icon: History },
+    { name: "Insight", href: "/insight", icon: LayoutDashboard },
   ];
 
   return (
