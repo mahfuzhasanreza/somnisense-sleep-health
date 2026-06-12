@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Activity, Clock, Coffee, Moon, Monitor, Loader2, Sparkles } from "lucide-react";
+import { Activity, Clock, Coffee, Moon, Monitor, Loader2, Sparkles, CheckCircle2, AlertTriangle, ShieldAlert } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { useRouter } from "next/navigation";
 
@@ -70,56 +70,52 @@ export default function Home() {
     }
   };
 
+  if (isLoading || !user) return null;
+
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col items-center justify-center p-6 relative overflow-hidden">
+    <div className="min-h-screen bg-slate-50 flex flex-col p-6 lg:p-12 relative overflow-hidden">
       {/* Background gradients */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
-        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-orange-600/10 blur-[120px]"></div>
-        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-amber-500/10 blur-[120px]"></div>
+        <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] rounded-full bg-orange-500/5 blur-[120px]"></div>
       </div>
 
-      <div className="max-w-2xl w-full">
-        <div className="text-center mb-10">
-          <div className="inline-flex items-center justify-center p-3 bg-white rounded-2xl mb-4 border border-orange-100 shadow-xl">
-            <Moon className="w-8 h-8 text-orange-600" />
+      <div className="max-w-5xl mx-auto w-full space-y-10">
+        
+        {/* Minimal Top Form Section */}
+        <section className="bg-white rounded-3xl p-6 lg:p-8 shadow-sm border border-slate-100">
+          <div className="mb-6 flex items-center justify-between">
+            <div>
+              <h1 className="text-2xl font-bold text-slate-900 tracking-tight">New Assessment</h1>
+              <p className="text-sm text-slate-500">Enter your recent sleep habits to analyze your risk profile.</p>
+            </div>
+            <div className="hidden sm:block p-3 bg-orange-50 rounded-2xl">
+              <Moon className="w-6 h-6 text-orange-500" />
+            </div>
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 tracking-tight bg-gradient-to-br from-orange-600 to-amber-600 bg-clip-text text-transparent">
-            Sleep Health AI
-          </h1>
-          <p className="text-slate-500 text-lg">
-            Discover your sleep risk profile based on your daily habits.
-          </p>
-        </div>
 
-        <div className="bg-white/80 backdrop-blur-xl border border-orange-100/50 rounded-3xl p-8 md:p-10 shadow-2xl relative overflow-hidden">
-          <form onSubmit={handleSubmit} className="space-y-6 relative z-10">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
               
-              {/* Stress Score */}
-              <div className="space-y-3">
-                <label className="flex items-center text-sm font-medium text-slate-700">
-                  <Activity className="w-4 h-4 mr-2 text-orange-500" />
-                  Stress Score (0-10)
+              {/* Stress */}
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center">
+                  <Activity className="w-3 h-3 mr-1 text-orange-500" /> Stress ({formData.stress_score})
                 </label>
-                <div className="relative group">
-                  <input
-                    type="range"
-                    name="stress_score"
-                    min="0"
-                    max="10"
-                    value={formData.stress_score}
-                    onChange={handleChange}
-                    className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-orange-600"
-                  />
-                  <div className="text-right text-xs text-slate-500 font-mono mt-1">{formData.stress_score}/10</div>
-                </div>
+                <input
+                  type="range"
+                  name="stress_score"
+                  min="0"
+                  max="10"
+                  value={formData.stress_score}
+                  onChange={handleChange}
+                  className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-orange-500 mt-2"
+                />
               </div>
 
               {/* Sleep Duration */}
-              <div className="space-y-3">
-                <label className="flex items-center text-sm font-medium text-slate-700">
-                  <Clock className="w-4 h-4 mr-2 text-orange-500" />
-                  Sleep Duration (hrs)
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center">
+                  <Clock className="w-3 h-3 mr-1 text-orange-500" /> Sleep (hrs)
                 </label>
                 <input
                   type="number"
@@ -129,17 +125,14 @@ export default function Home() {
                   step="0.5"
                   value={formData.sleep_duration_hrs}
                   onChange={handleChange}
-                  className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500 transition-all shadow-sm"
-                  placeholder="e.g. 7.5"
-                  required
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm text-slate-900 focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500 transition-all outline-none"
                 />
               </div>
 
-              {/* Caffeine Intake */}
-              <div className="space-y-3">
-                <label className="flex items-center text-sm font-medium text-slate-700">
-                  <Coffee className="w-4 h-4 mr-2 text-orange-500" />
-                  Caffeine Before Bed (mg)
+              {/* Caffeine */}
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center">
+                  <Coffee className="w-3 h-3 mr-1 text-orange-500" /> Caff (mg)
                 </label>
                 <input
                   type="number"
@@ -147,17 +140,14 @@ export default function Home() {
                   min="0"
                   value={formData.caffeine_mg_before_bed}
                   onChange={handleChange}
-                  className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500 transition-all shadow-sm"
-                  placeholder="e.g. 50"
-                  required
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm text-slate-900 focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500 transition-all outline-none"
                 />
               </div>
 
               {/* Screen Time */}
-              <div className="space-y-3">
-                <label className="flex items-center text-sm font-medium text-slate-700">
-                  <Monitor className="w-4 h-4 mr-2 text-orange-500" />
-                  Screen Time Before Bed (mins)
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center">
+                  <Monitor className="w-3 h-3 mr-1 text-orange-500" /> Screen (min)
                 </label>
                 <input
                   type="number"
@@ -165,17 +155,14 @@ export default function Home() {
                   min="0"
                   value={formData.screen_time_before_bed_mins}
                   onChange={handleChange}
-                  className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500 transition-all shadow-sm"
-                  placeholder="e.g. 60"
-                  required
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm text-slate-900 focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500 transition-all outline-none"
                 />
               </div>
 
-              {/* Wake Episodes */}
-              <div className="space-y-3 md:col-span-2">
-                <label className="flex items-center text-sm font-medium text-slate-700">
-                  <Moon className="w-4 h-4 mr-2 text-orange-500" />
-                  Wake Episodes per Night
+              {/* Wakes */}
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center">
+                  <Moon className="w-3 h-3 mr-1 text-orange-500" /> Wakes
                 </label>
                 <input
                   type="number"
@@ -183,78 +170,97 @@ export default function Home() {
                   min="0"
                   value={formData.wake_episodes_per_night}
                   onChange={handleChange}
-                  className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500 transition-all shadow-sm"
-                  placeholder="e.g. 1"
-                  required
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm text-slate-900 focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500 transition-all outline-none"
                 />
               </div>
+
             </div>
 
-            <div className="pt-4">
+            <div className="flex justify-end pt-2 border-t border-slate-100">
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full relative group overflow-hidden rounded-xl p-[1px] shadow-md hover:shadow-lg transition-all"
+                className="px-8 py-3 rounded-xl shadow-md bg-orange-600 hover:bg-orange-500 text-white font-bold transition-all flex items-center disabled:opacity-70 disabled:cursor-not-allowed"
               >
-                <span className="absolute inset-0 bg-gradient-to-r from-orange-500 via-amber-400 to-orange-500 rounded-xl opacity-100 transition-opacity duration-500"></span>
-                <div className="relative bg-orange-600 px-8 py-4 rounded-xl leading-none flex items-center justify-center space-x-2 transition-all duration-300 group-hover:bg-opacity-90">
-                  {loading ? (
-                    <Loader2 className="w-5 h-5 animate-spin text-white" />
-                  ) : (
-                    <>
-                      <Sparkles className="w-5 h-5 text-orange-100" />
-                      <span className="text-white font-semibold tracking-wide">Analyze Sleep Data</span>
-                    </>
-                  )}
-                </div>
+                {loading ? (
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                ) : (
+                  <>
+                    <Sparkles className="w-5 h-5 mr-2" /> Analyze Data
+                  </>
+                )}
               </button>
             </div>
           </form>
-
-          {/* Result Section */}
+          
           {error && (
-            <div className="mt-6 p-4 rounded-xl bg-red-50 border border-red-200 text-red-600 text-sm flex items-start shadow-sm">
-              <span className="block sm:inline">{error}</span>
+            <div className="mt-4 p-3 rounded-xl bg-red-50 border border-red-200 text-red-600 text-sm font-medium">
+              {error}
             </div>
           )}
+        </section>
 
-          {result !== null && (
-            <div className="mt-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-              <div className="p-1 rounded-2xl bg-gradient-to-br from-orange-500/20 to-amber-500/20 shadow-sm">
-                <div className="bg-white/95 backdrop-blur-xl rounded-xl p-6 border border-white/50">
-                  <div className="text-center mb-6">
-                    <p className="text-orange-600/80 text-sm uppercase tracking-widest font-bold mb-2">Prediction Result</p>
-                    <div className="flex items-center justify-center space-x-3">
-                      <div className="text-5xl font-extrabold bg-gradient-to-br from-orange-600 to-amber-500 bg-clip-text text-transparent">
-                        {result === 0 ? "Low Risk" : result === 1 ? "Moderate Risk" : "High Risk"}
-                      </div>
-                    </div>
-                    <p className="text-slate-500 mt-4 text-sm font-medium">
-                      Based on your input, the model predicts a {result === 0 ? "healthy" : "risky"} sleep profile.
-                    </p>
-                  </div>
-                  
-                  {recommendations.length > 0 && (
-                    <div className="border-t border-slate-100 pt-5 mt-5">
-                      <p className="text-slate-800 text-sm font-bold mb-3 flex items-center">
-                        <Sparkles className="w-4 h-4 mr-2 text-orange-500" />
-                        Personalized Recommendations
-                      </p>
-                      <ul className="space-y-2">
-                        {recommendations.map((rec, idx) => (
-                          <li key={idx} className="flex items-start text-sm text-slate-600 font-medium">
-                            <span className="text-orange-500 mr-2 mt-0.5">•</span>
-                            <span>{rec}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
+        {/* Dynamic Stylized Result Output */}
+        {result !== null && (
+          <section className="animate-in fade-in slide-in-from-bottom-8 duration-700">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              
+              {/* Primary Score Card */}
+              <div className={`col-span-1 p-8 rounded-3xl shadow-xl flex flex-col items-center justify-center text-center border overflow-hidden relative ${
+                result === 0 ? "bg-gradient-to-br from-green-500 to-emerald-600 border-green-400" :
+                result === 1 ? "bg-gradient-to-br from-amber-400 to-orange-500 border-amber-300" :
+                "bg-gradient-to-br from-rose-500 to-red-600 border-rose-400"
+              }`}>
+                {/* Decorative background circle */}
+                <div className="absolute w-64 h-64 bg-white/10 rounded-full -top-10 -right-10 blur-3xl"></div>
+                
+                <div className="bg-white/20 p-4 rounded-2xl mb-6 backdrop-blur-sm">
+                  {result === 0 ? <CheckCircle2 className="w-12 h-12 text-white" /> :
+                   result === 1 ? <AlertTriangle className="w-12 h-12 text-white" /> :
+                   <ShieldAlert className="w-12 h-12 text-white" />}
                 </div>
+                
+                <h2 className="text-white/80 text-sm font-black uppercase tracking-widest mb-2">Risk Level</h2>
+                <div className="text-5xl font-black text-white mb-2 tracking-tight">
+                  {result === 0 ? "LOW" : result === 1 ? "MODERATE" : "HIGH"}
+                </div>
+                <p className="text-white/90 text-sm font-medium px-4">
+                  Based on your analysis, you currently exhibit a {result === 0 ? "healthy" : "risky"} sleep profile.
+                </p>
+              </div>
+
+              {/* Recommendations Dashboard */}
+              <div className="col-span-1 lg:col-span-2 bg-white rounded-3xl p-8 shadow-xl border border-slate-100 flex flex-col">
+                <div className="flex items-center space-x-3 mb-8">
+                  <div className="p-2 bg-orange-100 rounded-lg">
+                    <Sparkles className="w-5 h-5 text-orange-600" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-slate-900 tracking-tight">Action Plan</h3>
+                </div>
+
+                {recommendations.length > 0 ? (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {recommendations.map((rec, idx) => (
+                      <div key={idx} className="bg-slate-50 p-5 rounded-2xl border border-slate-100 flex items-start space-x-4 hover:shadow-md transition-shadow">
+                        <div className="bg-white rounded-full w-8 h-8 flex items-center justify-center font-bold text-orange-500 shadow-sm shrink-0">
+                          {idx + 1}
+                        </div>
+                        <p className="text-slate-700 text-sm font-medium leading-relaxed">{rec}</p>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="flex-1 flex flex-col items-center justify-center text-center p-6 bg-slate-50 rounded-2xl border border-slate-100">
+                    <CheckCircle2 className="w-12 h-12 text-green-500 mb-3" />
+                    <h4 className="text-lg font-bold text-slate-900 mb-1">Excellent Routine</h4>
+                    <p className="text-slate-500 text-sm">Your sleep habits are perfectly optimized. Keep it up!</p>
+                  </div>
+                )}
               </div>
             </div>
-          )}
-        </div>
+          </section>
+        )}
+        
       </div>
     </div>
   );
