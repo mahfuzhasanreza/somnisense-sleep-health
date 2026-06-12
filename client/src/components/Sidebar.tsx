@@ -22,7 +22,7 @@ export default function Sidebar() {
         <div className="p-2 bg-orange-100 rounded-xl text-orange-600">
           <Moon className="w-6 h-6" />
         </div>
-        <span className="font-bold text-xl text-slate-800 tracking-tight">Sleep AI</span>
+        <span className="font-bold text-xl text-orange-600 tracking-tight">SomniSense</span>
       </div>
 
       <nav className="flex-1 px-4 space-y-2">
@@ -36,11 +36,10 @@ export default function Sidebar() {
               href={link.href}
               className={`flex items-center space-x-3 px-4 py-3 rounded-xl transition-all font-medium ${
                 isActive
-                  ? "bg-orange-50 text-orange-600"
+                  ? "bg-orange-100 text-orange-600"
                   : "text-slate-500 hover:bg-slate-50 hover:text-slate-800"
               }`}
             >
-              <Icon className="w-5 h-5" />
               <span>{link.name}</span>
             </Link>
           );
