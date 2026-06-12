@@ -5,7 +5,7 @@ import { Activity, Clock, Coffee, Moon, Monitor, Loader2, Sparkles, CheckCircle2
 import { useAuth } from "../context/AuthContext";
 import { useRouter } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
+import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
 
 interface Prediction {
   _id: string;
@@ -135,6 +135,12 @@ export default function Home() {
     stress: d.userInput.stress_score,
     sleep: d.userInput.sleep_duration_hrs
   }));
+
+  const riskChartData = [
+    { name: 'Low', count: riskCounts[0] || 0, fill: '#10b981' },
+    { name: 'Mod', count: riskCounts[1] || 0, fill: '#f59e0b' },
+    { name: 'High', count: riskCounts[2] || 0, fill: '#f43f5e' },
+  ];
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col p-6 lg:p-12 relative overflow-hidden">
@@ -338,30 +344,53 @@ export default function Home() {
               </Card>
             </div>
 
-            {/* Recharts Trends */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Behavioral Trends Over Time</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="h-[350px] w-full">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={chartData} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
-                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
-                      <XAxis dataKey="date" tick={{fill: '#64748b', fontSize: 12}} axisLine={false} tickLine={false} />
-                      <YAxis yAxisId="left" domain={[0, 12]} tick={{fill: '#f43f5e', fontSize: 12}} axisLine={false} tickLine={false} />
-                      <YAxis yAxisId="right" orientation="right" domain={[0, 14]} tick={{fill: '#3b82f6', fontSize: 12}} axisLine={false} tickLine={false} />
-                      <Tooltip 
-                        contentStyle={{borderRadius: '8px', border: '1px solid #e2e8f0', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'}} 
-                      />
-                      <Legend iconType="circle" wrapperStyle={{fontSize: '14px', paddingTop: '10px'}} />
-                      <Line yAxisId="left" type="monotone" dataKey="stress" name="Stress Score" stroke="#f43f5e" strokeWidth={3} dot={{r: 4}} activeDot={{r: 6}} />
-                      <Line yAxisId="right" type="monotone" dataKey="sleep" name="Sleep (hrs)" stroke="#3b82f6" strokeWidth={3} dot={{r: 4}} activeDot={{r: 6}} />
-                    </LineChart>
-                  </ResponsiveContainer>
-                </div>
-              </CardContent>
-            </Card>
+            {/* Charts Grid */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+              {/* Recharts Trends */}
+              <Card className="lg:col-span-2">
+                <CardHeader>
+                  <CardTitle>Behavioral Trends Over Time</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="h-[350px] w-full">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <LineChart data={chartData} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
+                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                        <XAxis dataKey="date" tick={{fill: '#64748b', fontSize: 12}} axisLine={false} tickLine={false} />
+                        <YAxis yAxisId="left" domain={[0, 12]} tick={{fill: '#f43f5e', fontSize: 12}} axisLine={false} tickLine={false} />
+                        <YAxis yAxisId="right" orientation="right" domain={[0, 14]} tick={{fill: '#3b82f6', fontSize: 12}} axisLine={false} tickLine={false} />
+                        <Tooltip 
+                          contentStyle={{borderRadius: '8px', border: '1px solid #e2e8f0', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'}} 
+                        />
+                        <Legend iconType="circle" wrapperStyle={{fontSize: '14px', paddingTop: '10px'}} />
+                        <Line yAxisId="left" type="monotone" dataKey="stress" name="Stress Score" stroke="#f43f5e" strokeWidth={3} dot={{r: 4}} activeDot={{r: 6}} />
+                        <Line yAxisId="right" type="monotone" dataKey="sleep" name="Sleep (hrs)" stroke="#3b82f6" strokeWidth={3} dot={{r: 4}} activeDot={{r: 6}} />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Risk Distribution Bar Chart */}
+              <Card className="lg:col-span-1">
+                <CardHeader>
+                  <CardTitle>Risk Distribution</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="h-[350px] w-full">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart data={riskChartData} margin={{ top: 20, right: 10, left: -20, bottom: 5 }}>
+                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                        <XAxis dataKey="name" tick={{fill: '#64748b', fontSize: 12}} axisLine={false} tickLine={false} />
+                        <YAxis allowDecimals={false} tick={{fill: '#64748b', fontSize: 12}} axisLine={false} tickLine={false} />
+                        <Tooltip cursor={{fill: '#f1f5f9'}} contentStyle={{borderRadius: '8px', border: '1px solid #e2e8f0', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'}} />
+                        <Bar dataKey="count" radius={[4, 4, 0, 0]} barSize={40} />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
           </section>
         )}
         
