@@ -79,7 +79,7 @@ export default function Home() {
         <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] rounded-full bg-orange-500/5 blur-[120px]"></div>
       </div>
 
-      <div className="max-w-5xl mx-auto w-full space-y-10">
+      <div className="mx-auto w-full space-y-10">
         
         {/* Minimal Top Form Section */}
         <section className="bg-white rounded-3xl p-6 lg:p-8 shadow-sm border border-slate-100">
@@ -88,9 +88,7 @@ export default function Home() {
               <h1 className="text-2xl font-bold text-slate-900 tracking-tight">New Assessment</h1>
               <p className="text-sm text-slate-500">Enter your recent sleep habits to analyze your risk profile.</p>
             </div>
-            <div className="hidden sm:block p-3 bg-orange-50 rounded-2xl">
-              <Moon className="w-6 h-6 text-orange-500" />
-            </div>
+            
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
