@@ -29,9 +29,9 @@ async function forwardAndLog(req, res, endpoint) {
 
     // Save to MongoDB
     const predictionLog = new Prediction({
-      requestData,
+      userInput: requestData,
       endpoint,
-      responseData
+      predictionResult: responseData
     });
     
     // Non-blocking save
