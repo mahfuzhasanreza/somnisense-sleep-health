@@ -57,6 +57,34 @@ def make_prediction(model, df):
             return model.predict(xgb.DMatrix(df))
         raise
 
+def generate_recommendations(payload: Dict[str, Any]):
+    recs = []
+    
+    stress = float(payload.get('stress_score', 0))
+    if stress > 6:
+        recs.append("Consider relaxation techniques like meditation or deep breathing to lower stress before bed.")
+        
+    caffeine = float(payload.get('caffeine_mg_before_bed', 0))
+    if caffeine > 30:
+        recs.append("Reduce caffeine intake in the evening to avoid disrupting your sleep cycle.")
+        
+    duration = float(payload.get('sleep_duration_hrs', 8))
+    if duration < 7:
+        recs.append("Aim for at least 7-8 hours of sleep per night to allow your body to fully recover.")
+        
+    screen_time = float(payload.get('screen_time_before_bed_mins', 0))
+    if screen_time > 30:
+        recs.append("Limit screen time to less than 30 minutes before bed to reduce blue light exposure.")
+        
+    wake = float(payload.get('wake_episodes_per_night', 0))
+    if wake > 1:
+        recs.append("Try to maintain a cool room temperature and limit liquids right before bed to minimize waking up.")
+        
+    if not recs:
+        recs.append("Your sleep habits look great! Keep maintaining your healthy routine.")
+        
+    return recs
+
 @app.post("/predict")
 async def predict(payload: Dict[str, Any]):
     try:
@@ -67,7 +95,9 @@ async def predict(payload: Dict[str, Any]):
             res = prediction[0].item()
         else:
             res = prediction[0]
-        return {"prediction": res}
+            
+        recommendations = generate_recommendations(payload)
+        return {"prediction": res, "recommendations": recommendations}
     except HTTPException:
         raise
     except Exception as e:
@@ -82,7 +112,9 @@ async def felt_predict(payload: Dict[str, Any]):
             res = prediction[0].item()
         else:
             res = prediction[0]
-        return {"prediction": res}
+            
+        recommendations = generate_recommendations(payload)
+        return {"prediction": res, "recommendations": recommendations}
     except HTTPException:
         raise
     except Exception as e:

@@ -14,6 +14,7 @@ export default function Home() {
 
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<number | null>(null);
+  const [recommendations, setRecommendations] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -29,6 +30,7 @@ export default function Home() {
     setLoading(true);
     setError(null);
     setResult(null);
+    setRecommendations([]);
 
     try {
       const response = await fetch("http://localhost:5000/api/predict", {
@@ -44,6 +46,7 @@ export default function Home() {
       }
 
       setResult(data.prediction);
+      setRecommendations(data.recommendations || []);
     } catch (err: any) {
       setError(err.message || "An unexpected error occurred");
     } finally {
@@ -202,16 +205,35 @@ export default function Home() {
           {result !== null && (
             <div className="mt-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
               <div className="p-1 rounded-2xl bg-gradient-to-br from-indigo-500/30 to-fuchsia-500/30">
-                <div className="bg-neutral-950/80 backdrop-blur-xl rounded-xl p-6 text-center border border-white/5">
-                  <p className="text-neutral-400 text-sm uppercase tracking-widest font-semibold mb-2">Prediction Result</p>
-                  <div className="flex items-center justify-center space-x-3">
-                    <div className="text-5xl font-bold bg-gradient-to-br from-indigo-300 to-fuchsia-300 bg-clip-text text-transparent">
-                      {result === 0 ? "Low Risk" : result === 1 ? "Moderate Risk" : "High Risk"}
+                <div className="bg-neutral-950/80 backdrop-blur-xl rounded-xl p-6 border border-white/5">
+                  <div className="text-center mb-6">
+                    <p className="text-neutral-400 text-sm uppercase tracking-widest font-semibold mb-2">Prediction Result</p>
+                    <div className="flex items-center justify-center space-x-3">
+                      <div className="text-5xl font-bold bg-gradient-to-br from-indigo-300 to-fuchsia-300 bg-clip-text text-transparent">
+                        {result === 0 ? "Low Risk" : result === 1 ? "Moderate Risk" : "High Risk"}
+                      </div>
                     </div>
+                    <p className="text-neutral-500 mt-4 text-sm">
+                      Based on your input, the model predicts a {result === 0 ? "healthy" : "risky"} sleep profile.
+                    </p>
                   </div>
-                  <p className="text-neutral-500 mt-4 text-sm">
-                    Based on your input, the model predicts a {result === 0 ? "healthy" : "risky"} sleep profile.
-                  </p>
+                  
+                  {recommendations.length > 0 && (
+                    <div className="border-t border-white/10 pt-5 mt-5">
+                      <p className="text-neutral-300 text-sm font-semibold mb-3 flex items-center">
+                        <Sparkles className="w-4 h-4 mr-2 text-indigo-400" />
+                        Personalized Recommendations
+                      </p>
+                      <ul className="space-y-2">
+                        {recommendations.map((rec, idx) => (
+                          <li key={idx} className="flex items-start text-sm text-neutral-400">
+                            <span className="text-indigo-400 mr-2 mt-0.5">•</span>
+                            <span>{rec}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
