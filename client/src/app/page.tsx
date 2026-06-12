@@ -100,23 +100,25 @@ export default function Home() {
               {/* Stress */}
               <div className="space-y-2">
                 <label className="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center">
-                  <Activity className="w-3 h-3 mr-1 text-orange-500" /> Stress (0-10)
+                  Stress ({formData.stress_score}/10)
                 </label>
-                <input
-                  type="number"
-                  name="stress_score"
-                  min="0"
-                  max="10"
-                  value={formData.stress_score}
-                  onChange={handleChange}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm text-slate-900 focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500 transition-all outline-none"
-                />
+                <div className="flex items-center h-[42px]  rounded-xl transition-all">
+                  <input
+                    type="range"
+                    name="stress_score"
+                    min="0"
+                    max="10"
+                    value={formData.stress_score}
+                    onChange={handleChange}
+                    className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-orange-500 outline-none"
+                  />
+                </div>
               </div>
 
               {/* Sleep Duration */}
               <div className="space-y-2">
                 <label className="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center">
-                  <Clock className="w-3 h-3 mr-1 text-orange-500" /> Sleep (hrs)
+                   Sleep (hrs)
                 </label>
                 <input
                   type="number"
@@ -133,7 +135,7 @@ export default function Home() {
               {/* Caffeine */}
               <div className="space-y-2">
                 <label className="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center">
-                  <Coffee className="w-3 h-3 mr-1 text-orange-500" /> Caff (mg)
+                  Caffeine (mg)
                 </label>
                 <input
                   type="number"
@@ -148,7 +150,7 @@ export default function Home() {
               {/* Screen Time */}
               <div className="space-y-2">
                 <label className="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center">
-                  <Monitor className="w-3 h-3 mr-1 text-orange-500" /> Screen (min)
+                  Screen (min)
                 </label>
                 <input
                   type="number"
@@ -162,8 +164,8 @@ export default function Home() {
 
               {/* Wakes */}
               <div className="space-y-2">
-                <label className="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center">
-                  <Moon className="w-3 h-3 mr-1 text-orange-500" /> Wakes
+                <label className="ml-1 text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center">
+                   Wakes
                 </label>
                 <input
                   type="number"
