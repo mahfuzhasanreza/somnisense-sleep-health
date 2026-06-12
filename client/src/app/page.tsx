@@ -1,9 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Activity, Clock, Coffee, Moon, Monitor, Loader2, Sparkles } from "lucide-react";
+import { useAuth } from "../context/AuthContext";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
+  const { user, token, isLoading } = useAuth();
+  const router = useRouter();
+
   const [formData, setFormData] = useState({
     stress_score: 5,
     sleep_duration_hrs: 7,
@@ -17,6 +22,12 @@ export default function Home() {
   const [recommendations, setRecommendations] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
 
+  useEffect(() => {
+    if (!isLoading && !user) {
+      router.push("/login");
+    }
+  }, [user, isLoading, router]);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -27,6 +38,8 @@ export default function Home() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!token) return;
+
     setLoading(true);
     setError(null);
     setResult(null);
@@ -35,7 +48,10 @@ export default function Home() {
     try {
       const response = await fetch("http://localhost:5000/api/predict", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
         body: JSON.stringify(formData),
       });
 

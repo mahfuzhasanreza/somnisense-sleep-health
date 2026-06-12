@@ -1,6 +1,11 @@
 const mongoose = require('mongoose');
 
 const predictionSchema = new mongoose.Schema({
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
   userInput: {
     stress_score: Number,
     sleep_duration_hrs: Number,

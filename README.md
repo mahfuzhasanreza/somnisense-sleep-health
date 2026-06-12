@@ -23,3 +23,7 @@ npm start
 3. Next.js Frontend: (port 3000)
 cd client
 npm run dev
+
+Demo:
+mahfuz@gmail.com
+mahfuz@gmail.com
