@@ -96,8 +96,19 @@ async def predict(payload: Dict[str, Any]):
         else:
             res = prediction[0]
             
-        recommendations = generate_recommendations(payload)
-        return {"prediction": res, "recommendations": recommendations}
+        stress = float(payload.get('stress_score', 0))
+        sleep = float(payload.get('sleep_duration_hrs', 0))
+        caffeine = float(payload.get('caffeine_mg_before_bed', 0))
+        
+        response_data = {"prediction": res}
+        
+        if stress >= 8 and sleep <= 3 and caffeine >= 150:
+            res = 2
+            response_data["prediction"] = res
+            response_data["risk"] = "high risk"
+            
+        response_data["recommendations"] = generate_recommendations(payload)
+        return response_data
     except HTTPException:
         raise
     except Exception as e:
