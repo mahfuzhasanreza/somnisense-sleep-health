@@ -79,34 +79,37 @@ export default function Home() {
         <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] rounded-full bg-orange-500/5 blur-[120px]"></div>
       </div>
 
-      <div className="mx-auto w-full space-y-10">
+      <div className="max-w-6xl mx-auto w-full space-y-10">
+        
+        {/* Header matching History route */}
+        <div className="mb-8 flex items-center space-x-3">
+          <div className="p-3 bg-white border border-orange-100 rounded-xl shadow-sm">
+            <Sparkles className="w-6 h-6 text-orange-600" />
+          </div>
+          <div>
+            <h1 className="text-3xl font-bold text-slate-900">Your Prediction</h1>
+            <p className="text-slate-500">Enter your recent sleep habits to analyze your risk profile.</p>
+          </div>
+        </div>
         
         {/* Minimal Top Form Section */}
         <section className="bg-white rounded-3xl p-6 lg:p-8 shadow-sm border border-slate-100">
-          <div className="mb-6 flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-bold text-slate-900 tracking-tight">New Assessment</h1>
-              <p className="text-sm text-slate-500">Enter your recent sleep habits to analyze your risk profile.</p>
-            </div>
-            
-          </div>
-
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+          <form onSubmit={handleSubmit}>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4 items-end">
               
               {/* Stress */}
               <div className="space-y-2">
                 <label className="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center">
-                  <Activity className="w-3 h-3 mr-1 text-orange-500" /> Stress ({formData.stress_score})
+                  <Activity className="w-3 h-3 mr-1 text-orange-500" /> Stress (0-10)
                 </label>
                 <input
-                  type="range"
+                  type="number"
                   name="stress_score"
                   min="0"
                   max="10"
                   value={formData.stress_score}
                   onChange={handleChange}
-                  className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-orange-500 mt-2"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm text-slate-900 focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500 transition-all outline-none"
                 />
               </div>
 
@@ -123,7 +126,7 @@ export default function Home() {
                   step="0.5"
                   value={formData.sleep_duration_hrs}
                   onChange={handleChange}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm text-slate-900 focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500 transition-all outline-none"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm text-slate-900 focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500 transition-all outline-none"
                 />
               </div>
 
@@ -138,7 +141,7 @@ export default function Home() {
                   min="0"
                   value={formData.caffeine_mg_before_bed}
                   onChange={handleChange}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm text-slate-900 focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500 transition-all outline-none"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm text-slate-900 focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500 transition-all outline-none"
                 />
               </div>
 
@@ -153,7 +156,7 @@ export default function Home() {
                   min="0"
                   value={formData.screen_time_before_bed_mins}
                   onChange={handleChange}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm text-slate-900 focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500 transition-all outline-none"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm text-slate-900 focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500 transition-all outline-none"
                 />
               </div>
 
@@ -168,26 +171,27 @@ export default function Home() {
                   min="0"
                   value={formData.wake_episodes_per_night}
                   onChange={handleChange}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm text-slate-900 focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500 transition-all outline-none"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm text-slate-900 focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500 transition-all outline-none"
                 />
               </div>
 
-            </div>
+              {/* Submit Button in the same row */}
+              <div className="h-[42px]">
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full h-full rounded-xl shadow-md bg-orange-600 hover:bg-orange-500 text-white font-bold transition-all flex items-center justify-center disabled:opacity-70 disabled:cursor-not-allowed"
+                >
+                  {loading ? (
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                  ) : (
+                    <>
+                      <Sparkles className="w-4 h-4 mr-2" /> Analyze
+                    </>
+                  )}
+                </button>
+              </div>
 
-            <div className="flex justify-end pt-2 border-t border-slate-100">
-              <button
-                type="submit"
-                disabled={loading}
-                className="px-8 py-3 rounded-xl shadow-md bg-orange-600 hover:bg-orange-500 text-white font-bold transition-all flex items-center disabled:opacity-70 disabled:cursor-not-allowed"
-              >
-                {loading ? (
-                  <Loader2 className="w-5 h-5 animate-spin" />
-                ) : (
-                  <>
-                    <Sparkles className="w-5 h-5 mr-2" /> Analyze Data
-                  </>
-                )}
-              </button>
             </div>
           </form>
           
