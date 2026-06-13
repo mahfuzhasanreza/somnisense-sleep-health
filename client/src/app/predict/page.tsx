@@ -114,12 +114,12 @@ export default function Home() {
 
   // Compute Metrics
   const totalAssessments = historyData.length;
-  const avgSleep = totalAssessments ? (historyData.reduce((acc, curr) => acc + curr.userInput.sleep_duration_hrs, 0) / totalAssessments).toFixed(1) : 0;
-  const avgStress = totalAssessments ? (historyData.reduce((acc, curr) => acc + curr.userInput.stress_score, 0) / totalAssessments).toFixed(1) : 0;
+  const avgSleep = totalAssessments ? (historyData.reduce((acc, curr) => acc + (curr.userInput?.sleep_duration_hrs ?? 0), 0) / totalAssessments).toFixed(1) : 0;
+  const avgStress = totalAssessments ? (historyData.reduce((acc, curr) => acc + (curr.userInput?.stress_score ?? 0), 0) / totalAssessments).toFixed(1) : 0;
   
   const riskCounts = historyData.reduce((acc, curr) => {
-    const risk = curr.predictionResult.prediction;
-    acc[risk] = (acc[risk] || 0) + 1;
+    const risk = curr.predictionResult?.prediction;
+    if (risk !== undefined) acc[risk] = (acc[risk] || 0) + 1;
     return acc;
   }, {} as Record<number, number>);
   
@@ -132,8 +132,8 @@ export default function Home() {
   // Format chart data (reverse to show chronological order)
   const chartData = [...historyData].reverse().map(d => ({
     date: new Date(d.timestamp).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }),
-    stress: d.userInput.stress_score,
-    sleep: d.userInput.sleep_duration_hrs
+    stress: d.userInput?.stress_score ?? 0,
+    sleep: d.userInput?.sleep_duration_hrs ?? 0
   }));
 
   const riskChartData = [
