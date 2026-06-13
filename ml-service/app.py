@@ -89,24 +89,37 @@ def generate_recommendations(payload: Dict[str, Any]):
 async def predict(payload: Dict[str, Any]):
     try:
         df = preprocess_input(payload)
-        prediction = make_prediction(risk_model, df)
-        # Convert prediction to native python type
-        if hasattr(prediction[0], 'item'):
-            res = prediction[0].item()
+
+        # --- Sleep Disorder Risk ---
+        risk_prediction = make_prediction(risk_model, df)
+        if hasattr(risk_prediction[0], 'item'):
+            res = risk_prediction[0].item()
         else:
-            res = prediction[0]
-            
+            res = risk_prediction[0]
+
         stress = float(payload.get('stress_score', 0))
         sleep = float(payload.get('sleep_duration_hrs', 0))
         caffeine = float(payload.get('caffeine_mg_before_bed', 0))
-        
+
         response_data = {"prediction": res}
-        
+
         if stress >= 8 and sleep <= 3 and caffeine >= 150:
             res = 2
             response_data["prediction"] = res
             response_data["risk"] = "high risk"
-            
+
+        # --- Felt Rested ---
+        try:
+            felt_prediction = make_prediction(felt_model, df)
+            if hasattr(felt_prediction[0], 'item'):
+                felt_res = felt_prediction[0].item()
+            else:
+                felt_res = felt_prediction[0]
+            response_data["felt_rested"] = int(felt_res)
+        except Exception as felt_err:
+            # Don't fail the whole request if felt model errors
+            response_data["felt_rested"] = None
+
         response_data["recommendations"] = generate_recommendations(payload)
         return response_data
     except HTTPException:

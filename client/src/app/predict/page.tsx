@@ -33,6 +33,7 @@ export default function Home() {
 
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<number | null>(null);
+  const [feltRested, setFeltRested] = useState<number | null>(null);
   const [recommendations, setRecommendations] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
 
@@ -80,6 +81,7 @@ export default function Home() {
     setLoading(true);
     setError(null);
     setResult(null);
+    setFeltRested(null);
     setRecommendations([]);
 
     try {
@@ -99,6 +101,7 @@ export default function Home() {
       }
 
       setResult(data.prediction);
+      setFeltRested(data.felt_rested ?? null);
       setRecommendations(data.recommendations || []);
       
       // Refresh history silently
@@ -240,26 +243,56 @@ export default function Home() {
         {result !== null && (
           <section className="animate-in fade-in slide-in-from-bottom-8 duration-700">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              <div className={`col-span-1 p-8 rounded-3xl flex flex-col items-center justify-center text-center border overflow-hidden relative ${
-                result === 0 ? "bg-gradient-to-br from-green-500 to-emerald-600 border-green-400" :
-                result === 1 ? "bg-gradient-to-br from-amber-400 to-orange-600 border-amber-300" :
-                "bg-gradient-to-br from-rose-500 to-red-600 border-red-400"
-              }`}>
-                <div className="absolute w-64 h-64 bg-white/10 rounded-full -top-10 -right-10 blur-3xl"></div>
-                <div className="bg-white/20 p-4 rounded-2xl mb-6 backdrop-blur-sm">
-                  {result === 0 ? <CheckCircle2 className="w-12 h-12 text-white" /> :
-                   result === 1 ? <AlertTriangle className="w-12 h-12 text-white" /> :
-                   <ShieldAlert className="w-12 h-12 text-white" />}
+
+              {/* Left column: Risk + Felt Rested stacked */}
+              <div className="col-span-1 flex flex-col gap-6">
+
+                {/* Sleep Disorder Risk Card */}
+                <div className={`flex-1 p-8 rounded-3xl flex flex-col items-center justify-center text-center border overflow-hidden relative ${
+                  result === 0 ? "bg-gradient-to-br from-green-500 to-emerald-600 border-green-400" :
+                  result === 1 ? "bg-gradient-to-br from-amber-400 to-orange-600 border-amber-300" :
+                  "bg-gradient-to-br from-rose-500 to-red-600 border-red-400"
+                }`}>
+                  <div className="absolute w-64 h-64 bg-white/10 rounded-full -top-10 -right-10 blur-3xl"></div>
+                  <div className="bg-white/20 p-4 rounded-2xl mb-4 backdrop-blur-sm">
+                    {result === 0 ? <CheckCircle2 className="w-10 h-10 text-white" /> :
+                     result === 1 ? <AlertTriangle className="w-10 h-10 text-white" /> :
+                     <ShieldAlert className="w-10 h-10 text-white" />}
+                  </div>
+                  <h2 className="text-white/80 text-xs font-black uppercase tracking-widest mb-1">Sleep Disorder Risk</h2>
+                  <div className="text-4xl font-black text-white mb-2 tracking-tight">
+                    {result === 0 ? "LOW" : result === 1 ? "MODERATE" : "HIGH"}
+                  </div>
+                  <p className="text-white/90 text-xs font-medium px-4">
+                    You currently exhibit a {result === 0 ? "healthy" : "risky"} sleep profile.
+                  </p>
                 </div>
-                <h2 className="text-white/80 text-sm font-black uppercase tracking-widest mb-2">Risk Level</h2>
-                <div className="text-5xl font-black text-white mb-2 tracking-tight">
-                  {result === 0 ? "LOW" : result === 1 ? "MODERATE" : "HIGH"}
-                </div>
-                <p className="text-white/90 text-sm font-medium px-4">
-                  Based on your analysis, you currently exhibit a {result === 0 ? "healthy" : "risky"} sleep profile.
-                </p>
+
+                {/* Felt Rested Card */}
+                {feltRested !== null && (
+                  <div className={`flex-1 p-8 rounded-3xl flex flex-col items-center justify-center text-center border overflow-hidden relative ${
+                    feltRested === 1
+                      ? "bg-gradient-to-br from-sky-500 to-blue-600 border-sky-400"
+                      : "bg-gradient-to-br from-slate-500 to-slate-700 border-slate-400"
+                  }`}>
+                    <div className="absolute w-64 h-64 bg-white/10  rounded-full -top-10 -right-10 blur-3xl"></div>
+                    <div className="bg-white/20 p-4 rounded-2xl mb-4 backdrop-blur-sm">
+                      <Moon className="w-10 h-10 text-white" />
+                    </div>
+                    <h2 className="text-white/80 text-xs font-black uppercase tracking-widest mb-1">Felt Rested</h2>
+                    <div className="text-4xl font-black text-white mb-2 tracking-tight">
+                      {feltRested === 1 ? "YES" : "NO"}
+                    </div>
+                    <p className="text-white/85 text-xs font-medium px-4">
+                      {feltRested === 1
+                        ? "You are likely to wake up feeling rested."
+                        : "You may not feel fully rested after sleep."}
+                    </p>
+                  </div>
+                )}
               </div>
 
+              {/* Right column: Action Plan */}
               <div className="col-span-1 lg:col-span-2 bg-white rounded-3xl p-8 border border-slate-200 flex flex-col">
                 <div className="flex items-center space-x-3 mb-8">
                   <h3 className="text-2xl font-bold text-slate-900 tracking-tight">Action Plan</h3>
